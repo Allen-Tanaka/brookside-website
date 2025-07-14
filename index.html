@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Brookside School</title>
+  <link rel="icon" href="/assets/logo.png" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+    .trajan {
+      font-family: 'Cinzel', serif;
+      letter-spacing: 2px;
+    }
+
+    .helvetica {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    }
+  </style>
+</head>
+<body class="bg-white text-gray-800">
+
+  <!-- ANNOUNCEMENT BANNER -->
+  <div class="bg-yellow-400 text-black text-sm text-center py-2 px-4 font-semibold tracking-wide">
+    🎉 Admissions Open for 2025! | Uniform Collection on Open Day | Explore Our New FET Phase Curriculum
+  </div>
+
+  <!-- NAVBAR -->
+  <header class="bg-[#1D2D44] text-white shadow-md sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-1 flex flex-wrap items-center justify-between helvetica">
+
+      <!-- LEFT NAV -->
+      <nav class="flex space-x-8 items-center text-base font-medium">
+        <a href="#home" class="hover:text-yellow-300">Home</a>
+        <a href="#about" class="hover:text-yellow-300">About</a>
+        <a href="#admissions" class="hover:text-yellow-300">Admissions</a>
+        <div class="relative group">
+          <button class="hover:text-yellow-300">School ▾</button>
+          <div class="absolute hidden group-hover:block bg-white text-black mt-1 shadow-md rounded whitespace-nowrap z-50">
+            <a href="#foundation" class="block px-4 py-2 hover:bg-gray-100">Foundation Phase</a>
+            <a href="#intermediate" class="block px-4 py-2 hover:bg-gray-100">Intermediate Phase</a>
+            <a href="#senior" class="block px-4 py-2 hover:bg-gray-100">Senior Phase</a>
+            <a href="#fet" class="block px-4 py-2 hover:bg-gray-100">FET Phase</a>
+            <a href="#fet" class="block px-4 py-2 hover:bg-gray-100">Heart of Brookside</a>
+          </div>
+        </div>
+      </nav>
+
+      <!-- LOGO + NAME -->
+      <div class="flex flex-col items-center justify-center text-center">
+        <img src="assets/brookside-logo.png" alt="Brookside Logo" class="h-16 md:h-24 mb-2">
+        <span class="text-lg md:text-2xl font-bold trajan uppercase">Brookside School</span>
+        <span class="text-xs md:text-sm italic tracking-wide mt-1">Excellentia • Fides • Ductus</span>
+      </div>
+
+      <!-- RIGHT NAV -->
+      <div class="flex space-x-6 items-center text-base font-medium">
+        <a href="/campuses" class="hover:text-yellow-300">Campuses</a>
+        <a href="/policies" class="hover:text-yellow-300">Policies</a>
+        <a href="#contact" class="hover:text-yellow-300">Contact</a>
+        <button class="hover:text-yellow-300">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+        <a href="/apply" class="bg-yellow-500 hover:bg-yellow-600 text-black px-4 py-2 rounded font-semibold text-sm">APPLY NOW</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- HERO -->
+  <section id="home" class="relative">
+    <img src="assets/brookside-campus.jpg" alt="Brookside Campus" class="w-full h-[85vh] object-cover">
+    <div class="absolute inset-0 bg-black bg-opacity-40 flex items-center justify-center text-center text-white px-4">
+      <div>
+        <h1 class="text-3xl md:text-5xl font-bold mb-4 trajan">Nurturing Excellence, Inspiring Faith, Shaping Leaders</h1>
+        <p class="text-base md:text-xl font-light">Welcome to Brookside School – Where the Future Begins</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- QUICK LINKS -->
+  <section class="bg-[#1D2D44] text-white text-center py-4 text-sm md:text-base font-medium">
+    <div class="max-w-7xl mx-auto flex flex-wrap justify-center gap-6">
+      <a href="#foundation" class="hover:text-yellow-300">Foundation Phase</a>
+      <a href="#intermediate" class="hover:text-yellow-300">Intermediate Phase</a>
+      <a href="#senior" class="hover:text-yellow-300">Senior Phase</a>
+      <a href="#fet" class="hover:text-yellow-300">FET Phase</a>
+      <a href="/aftercare" class="hover:text-yellow-300">Aftercare</a>
+      <a href="/downloads" class="hover:text-yellow-300">Heart of Brookside</a>
+    </div>
+  </section>
+
+  <!-- PROFESSIONAL FOOTER -->
+  <footer class="bg-[#1D2D44] text-white pt-10 pb-6 text-sm">
+    <div class="max-w-7xl mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
+      <div>
+        <h2 class="text-xl font-bold trajan mb-2">Brookside School</h2>
+        <p class="text-gray-300 mb-4">Nurturing Excellence, Inspiring Faith, Shaping Leaders.</p>
+        <div class="flex space-x-4 text-lg">
+          <a href="#" class="hover:text-yellow-300"><i class="fab fa-facebook-f"></i></a>
+          <a href="#" class="hover:text-yellow-300"><i class="fab fa-instagram"></i></a>
+          <a href="#" class="hover:text-yellow-300"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+      <div>
+        <h3 class="font-semibold text-yellow-400 mb-2">Contact Us</h3>
+        <p class="text-gray-300">5 De Wet Street</p>
+        <p class="text-gray-300">Piet Retief, Mpumalanga, 2380</p>
+        <p class="text-gray-300 mt-2">Phone: <a href="tel:+27173451111" class="hover:text-yellow-300">+27 (087) 527-0655</a></p>
+        <p class="text-gray-300">Email: <a href="mailto:admin@brookside.africa" class="hover:text-yellow-300">info@brookside.ac.za</a></p>
+      </div>
+      <div>
+        <h3 class="font-semibold text-yellow-400 mb-2">Quick Links</h3>
+        <ul class="space-y-1">
+          <li><a href="#about" class="hover:text-yellow-300">About</a></li>
+          <li><a href="#admissions" class="hover:text-yellow-300">Admissions</a></li>
+          <li><a href="#foundation" class="hover:text-yellow-300">Foundation Phase</a></li>
+          <li><a href="#contact" class="hover:text-yellow-300">Contact</a></li>
+          <li><a href="/apply" class="hover:text-yellow-300">Apply Now</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="font-semibold text-yellow-400 mb-2">Our Campuses</h3>
+        <ul class="space-y-1">
+          <li><a href="#piet-retief" class="hover:text-yellow-300">Piet Retief - SA</a></li>
+          <li><a href="#nelspruit" class="hover:text-yellow-300">Nelspruit - SA</a></li>
+          <li><a href="#harare" class="hover:text-yellow-300">Harare - Zimbabwe</a></li>
+          <li><a href="#namibia" class="hover:text-yellow-300">Namibia</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="mt-10 border-t border-gray-700 pt-4 text-center text-gray-400 text-xs px-4">
+      &copy; 2025 Brookside School | Powered by The Brookside Group (PTY) LTD | Reg. No. 2021/871093/07
+    </div>
+  </footer>
+
+  <!-- FontAwesome -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+</body>
+</html>

@@ -1,0 +1,49 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+
+.trajan {
+  font-family: 'Cinzel', serif;
+}
+
+.helvetica {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.nav-link {
+  width: 130px;
+  text-align: center;
+  font-size: 0.875rem;
+  padding: 0.5rem 0;
+  transition: all 0.3s;
+}
+
+.nav-link:hover {
+  color: #facc15; /* Tailwind yellow-300 */
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  color: black;
+  min-width: 160px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 50;
+  display: none;
+  flex-direction: column;
+}
+
+.group:hover .dropdown-menu {
+  display: flex;
+}
+
+.dropdown-menu a {
+  padding: 8px 16px;
+  text-align: left;
+  font-size: 0.875rem;
+  white-space: nowrap;
+}
+
+.dropdown-menu a:hover {
+  background-color: #f3f4f6; /* Tailwind gray-100 */
+}
