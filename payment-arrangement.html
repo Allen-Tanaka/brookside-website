@@ -92,6 +92,8 @@
     .badge.due { background: #E6F1FB; color: #0C447C; }
     .badge.prorata { background: #EEEDFE; color: #3C3489; }
     .badge.openday { background: #FEF3C7; color: #92400E; }
+    .stbl tr.paid-row td { background: #EAF3DE; color: #1a3d09; }
+    .stbl tr.paid-row.extra-row td { background: #d4edbe; }
 
     .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.2rem 0; }
 
@@ -305,8 +307,12 @@
         <div class="scard-row">
           <div class="scard"><div class="scard-lbl">Monthly installment</div><div class="scard-val blue" id="instAmt">R 0</div></div>
           <div class="scard"><div class="scard-lbl">Total installments</div><div class="scard-val" id="totalInst">0</div></div>
-          <div class="scard"><div class="scard-lbl">Schedule starts</div><div class="scard-val green" id="schedStart">Jan</div></div>
+          <div class="scard"><div class="scard-lbl">Installments paid</div><div class="scard-val green" id="instPaid">0 of 0</div></div>
           <div class="scard"><div class="scard-lbl">Balance outstanding</div><div class="scard-val amber" id="balOut">R 0</div></div>
+        </div>
+        <div class="notice info" style="margin-bottom:0.8rem;padding:7px 12px;">
+          <i class="ti ti-calendar-check" aria-hidden="true"></i>
+          <div id="dueDateNote" style="font-size:11px;">January fees due 15 Jan (Open Day). Subsequent installments due 22nd of each month.</div>
         </div>
         <div style="overflow-x:auto;">
           <table class="stbl">
@@ -400,10 +406,23 @@
       const instAmt = baseN > 0 ? total / baseN : 0;
       const balance = Math.max(0, total - paid);
 
+      // Count installments paid based on cumulative amount vs amount paid
+      let instPaidCount = 0;
+      let cumCheck = 0;
+      for (let k = 1; k <= totalInst; k++) {
+        const isFirstK = k === 1;
+        const amt = (isFirstK && proRata) ? proRataAmt : instAmt;
+        cumCheck += amt;
+        if (cumCheck <= paid) instPaidCount++;
+      }
+
       document.getElementById('instAmt').textContent = 'R ' + fmt(instAmt);
       document.getElementById('totalInst').textContent = totalInst;
+      document.getElementById('instPaid').textContent = instPaidCount + ' of ' + totalInst;
       document.getElementById('balOut').textContent = 'R ' + fmt(balance);
-      document.getElementById('schedStart').textContent = MONTHSFULL[startMonth - 1] + ' ' + yr;
+
+      const dueDayLabel = newDate === 15 ? '22nd of each month' : '3rd of the following month';
+      document.getElementById('dueDateNote').textContent = `January fees due 15 Jan (Open Day). Subsequent installments due ${dueDayLabel}.`;
 
       const noteEl = document.getElementById('midYearNoteText');
       if (midYear) {
@@ -460,9 +479,13 @@
         if (isExtra) noteParts.push('<span class="badge extra">Arrear</span>');
         const noteTxt = noteParts.length ? noteParts.join(' ') : '—';
 
-        const statusTxt = cum <= paid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
+        const isPaid = cum <= paid;
+        const statusTxt = isPaid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
-        if (isExtra) tr.className = 'extra-row';
+        const rowClasses = [];
+        if (isPaid) rowClasses.push('paid-row');
+        if (isExtra) rowClasses.push('extra-row');
+        if (rowClasses.length) tr.className = rowClasses.join(' ');
         tr.innerHTML = `<td>${i}</td><td>${dateStr}</td><td>R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
         tbody.appendChild(tr);
       }
