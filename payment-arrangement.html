@@ -507,14 +507,12 @@
         if (dateChanged) noteParts.push('<span class="badge extra">Date changed</span>');
         if (isPaid) noteParts.push(`<span class="badge paid">Paid on ${payDateStr}</span>`);
         if (isOverdue) noteParts.push(`<span class="badge overdue-badge">Arrears R ${fmt(overdueAmt)}</span>`);
-        else if (isPartial) noteParts.push(`<span class="badge extra">Arrears R ${fmt(cum - paid)}</span>`);
         const noteTxt = noteParts.length ? noteParts.join('<br>') : '—';
 
         const statusTxt = isPaid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
         if (isPaid) tr.className = 'paid-row';
         else if (isOverdue) tr.className = 'overdue-row';
-        else if (isPartial) tr.className = 'arrear-row';
         tr.innerHTML = `<td>${i}</td><td>${payDateStr}</td><td>${dueDateStr}</td><td style="white-space:nowrap">R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
         tbody.appendChild(tr);
       }
