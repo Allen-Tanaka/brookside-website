@@ -316,8 +316,8 @@
         </div>
         <div style="overflow-x:auto;">
           <table class="stbl">
-            <colgroup><col style="width:32px"><col style="width:110px"><col style="width:90px"><col style="width:80px"><col style="width:65px"></colgroup>
-            <thead><tr><th>#</th><th>Due date</th><th>Amount (R)</th><th>Notes</th><th>Status</th></tr></thead>
+            <colgroup><col style="width:24px"><col style="width:82px"><col style="width:82px"><col style="width:68px"><col style="width:140px"><col style="width:46px"></colgroup>
+            <thead><tr><th>#</th><th>Payment date</th><th>Due date</th><th>Amount (R)</th><th>Notes</th><th>Status</th></tr></thead>
             <tbody id="schedBody"></tbody>
           </table>
         </div>
@@ -401,8 +401,7 @@
 
       const lastBillingMonth = Math.min(12, stdN);
       const baseN = midYear ? Math.max(1, lastBillingMonth - startMonth + 1) : stdN;
-      const extraMonth = changed ? 1 : 0;
-      const totalInst = baseN + extraMonth;
+      const totalInst = baseN;
       const instAmt = baseN > 0 ? total / baseN : 0;
       const balance = Math.max(0, total - paid);
 
@@ -436,16 +435,16 @@
         document.getElementById('sameNotice').style.display = 'none';
         const fL = currentType === 15 ? '15th' : '25th/month-end';
         const tL = newDate === 15 ? '15th' : '25th/month-end';
-        document.getElementById('changeNoticeText').innerHTML = `Payment date changing from <strong>${fL}</strong> to <strong>${tL}</strong> effective ${MONTHSFULL[effMonth-1]} ${yr}. A one-month arrear is created — an extra installment is added to settle the outstanding balance. Total installments: <strong>${totalInst}</strong>.`;
+        document.getElementById('changeNoticeText').innerHTML = `Payment date changing from <strong>${fL}</strong> to <strong>${tL}</strong> effective ${MONTHSFULL[effMonth-1]} ${yr}. Due dates adjust from that month — total installments remain <strong>${totalInst}</strong>.`;
       } else {
         document.getElementById('changeNotice').style.display = 'none';
         document.getElementById('sameNotice').style.display = 'flex';
       }
 
-      buildSchedule(instAmt, baseN, totalInst, yr, startMonth, newDate, changed, paid, proRata, proRataAmt);
+      buildSchedule(instAmt, totalInst, yr, startMonth, newDate, currentType, changed, effMonth, paid, proRata, proRataAmt);
     }
 
-    function buildSchedule(instAmt, baseN, totalInst, yr, startMonth, newDate, changed, paid, proRata, proRataAmt) {
+    function buildSchedule(instAmt, totalInst, yr, startMonth, newDate, currentType, changed, effMonth, paid, proRata, proRataAmt) {
       const tbody = document.getElementById('schedBody');
       tbody.innerHTML = '';
       let cum = 0;
@@ -454,39 +453,45 @@
         const mIdx = (startMonth - 1 + (i - 1)) % 12;
         const yAdj = yr + Math.floor((startMonth - 1 + (i - 1)) / 12);
         const isJanuary = mIdx === 0;
-        const isExtra = changed && i === totalInst;
         const isFirst = i === 1;
         const isProRata = isFirst && proRata;
         const amt = isProRata ? proRataAmt : instAmt;
         cum += amt;
+        const isPaid = cum <= paid;
 
-        // January: always 15 Jan (Open Day)
-        // 15th payers: 22nd of the same month
-        // 25th payers: 3rd of the following month
-        let dateStr;
+        // From effMonth onwards (within the same year or later), apply the new payment date
+        const instMonthNum = mIdx + 1;
+        const useNewDate = !changed || yAdj > yr || (yAdj === yr && instMonthNum >= effMonth);
+        const appliedPayDate = useNewDate ? newDate : currentType;
+        const dateChanged = changed && useNewDate && !isJanuary && instMonthNum === effMonth && yAdj === yr;
+
+        // Payment date: the day the parent pays (15th or 25th); January always 15th (Open Day)
+        const payDateStr = isJanuary
+          ? `15 Jan ${yAdj}`
+          : `${appliedPayDate} ${MONTHS[mIdx]} ${yAdj}`;
+
+        // Due date: 7 days after payment date; January due = same as payment date (Open Day)
+        let dueDateStr;
         if (isJanuary) {
-          dateStr = `15 Jan ${yAdj}`;
-        } else if (newDate === 15) {
-          dateStr = `22 ${MONTHS[mIdx]} ${yAdj}`;
+          dueDateStr = `15 Jan ${yAdj}`;
+        } else if (appliedPayDate === 15) {
+          dueDateStr = `22 ${MONTHS[mIdx]} ${yAdj}`;
         } else {
           const d = new Date(yAdj, mIdx + 1, 3);
-          dateStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+          dueDateStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
         }
 
         const noteParts = [];
         if (isJanuary) noteParts.push('<span class="badge openday">Open day</span>');
         if (isProRata) noteParts.push('<span class="badge prorata">Pro-rata</span>');
-        if (isExtra) noteParts.push('<span class="badge extra">Arrear</span>');
-        const noteTxt = noteParts.length ? noteParts.join(' ') : '—';
+        if (dateChanged) noteParts.push('<span class="badge extra">Date changed</span>');
+        if (isPaid) noteParts.push(`<span class="badge paid">Paid on ${payDateStr}</span>`);
+        const noteTxt = noteParts.length ? noteParts.join('<br>') : '—';
 
-        const isPaid = cum <= paid;
         const statusTxt = isPaid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
-        const rowClasses = [];
-        if (isPaid) rowClasses.push('paid-row');
-        if (isExtra) rowClasses.push('extra-row');
-        if (rowClasses.length) tr.className = rowClasses.join(' ');
-        tr.innerHTML = `<td>${i}</td><td>${dateStr}</td><td>R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
+        if (isPaid) tr.className = 'paid-row';
+        tr.innerHTML = `<td>${i}</td><td>${payDateStr}</td><td>${dueDateStr}</td><td style="white-space:nowrap">R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
         tbody.appendChild(tr);
       }
     }
