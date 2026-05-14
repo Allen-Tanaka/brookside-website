@@ -525,15 +525,8 @@
         const settleMIdx = (lastMIdx + 1) % 12;
         const settleYAdj = lastMIdx === 11 ? lastYAdj + 1 : lastYAdj;
 
-        let settlePayStr, settleDueStr;
-        if (newDate === 15) {
-          settlePayStr = `15 ${MONTHS[settleMIdx]} ${settleYAdj}`;
-          settleDueStr = `22 ${MONTHS[settleMIdx]} ${settleYAdj}`;
-        } else {
-          settlePayStr = `25 ${MONTHS[settleMIdx]} ${settleYAdj}`;
-          const d = new Date(settleYAdj, settleMIdx + 1, 3);
-          settleDueStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
-        }
+        const settlePayStr = `3 Dec ${settleYAdj}`;
+        const settleDueStr = `7 Dec ${settleYAdj}`;
 
         const tr = document.createElement('tr');
         tr.className = 'settlement-row';
