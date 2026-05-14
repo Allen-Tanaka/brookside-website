@@ -95,6 +95,9 @@
     .stbl tr.paid-row td { background: #EAF3DE; color: #1a3d09; }
     .stbl tr.paid-row.extra-row td { background: #d4edbe; }
     .stbl tr.arrear-row td { background: #FEF3C7; color: #78350F; }
+    .stbl tr.overdue-row td { background: #FEE2E2; color: #7F1D1D; }
+    .stbl tr.settlement-row td { background: #FEE2E2; border-top: 2px solid #DC2626; font-weight: 500; color: #7F1D1D; }
+    .badge.overdue-badge { background: #FEE2E2; color: #991B1B; }
 
     .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.2rem 0; }
 
@@ -315,6 +318,10 @@
           <i class="ti ti-calendar-check" aria-hidden="true"></i>
           <div id="dueDateNote" style="font-size:11px;">January fees due 15 Jan (Open Day). Subsequent installments due 22nd of each month.</div>
         </div>
+        <div id="arrearsNotice" class="notice" style="display:none;background:#FEE2E2;border:0.5px solid #F87171;color:#7F1D1D;margin-bottom:0.8rem;padding:7px 12px;">
+          <i class="ti ti-alert-circle" aria-hidden="true" style="font-size:15px;margin-top:1px;flex-shrink:0;"></i>
+          <div id="arrearsNoticeText" style="font-size:11px;"></div>
+        </div>
         <div style="overflow-x:auto;">
           <table class="stbl">
             <colgroup><col style="width:24px"><col style="width:82px"><col style="width:82px"><col style="width:68px"><col style="width:140px"><col style="width:46px"></colgroup>
@@ -449,6 +456,9 @@
       const tbody = document.getElementById('schedBody');
       tbody.innerHTML = '';
       let cum = 0;
+      let totalArrears = 0;
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
 
       for (let i = 1; i <= totalInst; i++) {
         const mIdx = (startMonth - 1 + (i - 1)) % 12;
@@ -461,7 +471,6 @@
         const prevCum = cum - amt;
         const isPaid = cum <= paid;
         const isPartial = !isPaid && prevCum < paid && paid > 0;
-        const arrears = isPartial ? cum - paid : 0;
 
         // From effMonth onwards (within the same year or later), apply the new payment date
         const instMonthNum = mIdx + 1;
@@ -469,36 +478,74 @@
         const appliedPayDate = useNewDate ? newDate : currentType;
         const dateChanged = changed && useNewDate && !isJanuary && instMonthNum === effMonth && yAdj === yr;
 
-        // Payment date: the day the parent pays (15th or 25th); January always 15th (Open Day)
+        // Payment date string
         const payDateStr = isJanuary
           ? `15 Jan ${yAdj}`
           : `${appliedPayDate} ${MONTHS[mIdx]} ${yAdj}`;
 
-        // Due date: 7 days after payment date; January due = same as payment date (Open Day)
-        let dueDateStr;
+        // Due date as both a Date object (for overdue check) and display string
+        let dueDateObj, dueDateStr;
         if (isJanuary) {
+          dueDateObj = new Date(yAdj, 0, 15);
           dueDateStr = `15 Jan ${yAdj}`;
         } else if (appliedPayDate === 15) {
+          dueDateObj = new Date(yAdj, mIdx, 22);
           dueDateStr = `22 ${MONTHS[mIdx]} ${yAdj}`;
         } else {
-          const d = new Date(yAdj, mIdx + 1, 3);
-          dueDateStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+          dueDateObj = new Date(yAdj, mIdx + 1, 3);
+          dueDateStr = `3 ${MONTHS[dueDateObj.getMonth()]} ${dueDateObj.getFullYear()}`;
         }
+
+        // Overdue: past due date and not fully paid
+        const isOverdue = !isPaid && dueDateObj < today;
+        const overdueAmt = isPartial ? (cum - paid) : (isOverdue ? amt : 0);
+        if (isOverdue) totalArrears += overdueAmt;
 
         const noteParts = [];
         if (isJanuary) noteParts.push('<span class="badge openday">Open day</span>');
         if (isProRata) noteParts.push('<span class="badge prorata">Pro-rata</span>');
         if (dateChanged) noteParts.push('<span class="badge extra">Date changed</span>');
         if (isPaid) noteParts.push(`<span class="badge paid">Paid on ${payDateStr}</span>`);
-        if (isPartial) noteParts.push(`<span class="badge extra">Arrears R ${fmt(arrears)}</span>`);
+        if (isOverdue) noteParts.push(`<span class="badge overdue-badge">Arrears R ${fmt(overdueAmt)}</span>`);
+        else if (isPartial) noteParts.push(`<span class="badge extra">Arrears R ${fmt(cum - paid)}</span>`);
         const noteTxt = noteParts.length ? noteParts.join('<br>') : '—';
 
         const statusTxt = isPaid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
         if (isPaid) tr.className = 'paid-row';
+        else if (isOverdue) tr.className = 'overdue-row';
         else if (isPartial) tr.className = 'arrear-row';
         tr.innerHTML = `<td>${i}</td><td>${payDateStr}</td><td>${dueDateStr}</td><td style="white-space:nowrap">R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
         tbody.appendChild(tr);
+      }
+
+      // Arrear settlement row — one extra month at the end for all overdue amounts
+      const arrearsNotice = document.getElementById('arrearsNotice');
+      if (totalArrears > 0) {
+        const lastMIdx = (startMonth - 1 + (totalInst - 1)) % 12;
+        const lastYAdj = yr + Math.floor((startMonth - 1 + (totalInst - 1)) / 12);
+        const settleMIdx = (lastMIdx + 1) % 12;
+        const settleYAdj = lastMIdx === 11 ? lastYAdj + 1 : lastYAdj;
+
+        let settlePayStr, settleDueStr;
+        if (newDate === 15) {
+          settlePayStr = `15 ${MONTHS[settleMIdx]} ${settleYAdj}`;
+          settleDueStr = `22 ${MONTHS[settleMIdx]} ${settleYAdj}`;
+        } else {
+          settlePayStr = `25 ${MONTHS[settleMIdx]} ${settleYAdj}`;
+          const d = new Date(settleYAdj, settleMIdx + 1, 3);
+          settleDueStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        const tr = document.createElement('tr');
+        tr.className = 'settlement-row';
+        tr.innerHTML = `<td>+</td><td>${settlePayStr}</td><td>${settleDueStr}</td><td style="white-space:nowrap">R ${fmt(totalArrears)}</td><td><span class="badge overdue-badge">Arrear settlement</span></td><td><span class="badge due">Due</span></td>`;
+        tbody.appendChild(tr);
+
+        arrearsNotice.style.display = 'flex';
+        document.getElementById('arrearsNoticeText').innerHTML = `<strong>Total overdue arrears: R ${fmt(totalArrears)}</strong> — consolidated into a settlement installment at the end of the schedule.`;
+      } else {
+        arrearsNotice.style.display = 'none';
       }
     }
 
