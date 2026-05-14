@@ -380,6 +380,18 @@
     const MONTHSFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 
     const now = new Date();
+    const currentYear = now.getFullYear();
+
+    // Ensure the current year exists in the academic year dropdown, then select it
+    const acadSel = document.getElementById('acadYear');
+    if (!acadSel.querySelector(`option[value="${currentYear}"]`)) {
+      const opt = document.createElement('option');
+      opt.value = currentYear;
+      opt.textContent = currentYear;
+      acadSel.appendChild(opt);
+    }
+    acadSel.value = currentYear;
+
     document.getElementById('todayLabel').textContent = now.toLocaleDateString('en-ZA', {day:'2-digit', month:'short', year:'numeric'});
     document.getElementById('arrangementDate').value = now.toISOString().split('T')[0];
     document.getElementById('effectiveMonth').value = now.getMonth() + 1;
