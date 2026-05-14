@@ -91,6 +91,7 @@
     .badge.paid { background: #EAF3DE; color: #27500A; }
     .badge.due { background: #E6F1FB; color: #0C447C; }
     .badge.prorata { background: #EEEDFE; color: #3C3489; }
+    .badge.openday { background: #FEF3C7; color: #92400E; }
 
     .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.2rem 0; }
 
@@ -416,7 +417,7 @@
         document.getElementById('sameNotice').style.display = 'none';
         const fL = currentType === 15 ? '15th' : '25th/month-end';
         const tL = newDate === 15 ? '15th' : '25th/month-end';
-        document.getElementById('changeNoticeText').innerHTML = `Payment date changing from <strong>${fL}</strong> to <strong>${tL}</strong> effective ${MONTHSFULL[effMonth-1]} ${yr}. A one-month arrear is created — an extra installment is added. Total installments: <strong>${totalInst}</strong>.`;
+        document.getElementById('changeNoticeText').innerHTML = `Payment date changing from <strong>${fL}</strong> to <strong>${tL}</strong> effective ${MONTHSFULL[effMonth-1]} ${yr}. A one-month arrear is created — an extra installment is added to settle the outstanding balance. Total installments: <strong>${totalInst}</strong>.`;
       } else {
         document.getElementById('changeNotice').style.display = 'none';
         document.getElementById('sameNotice').style.display = 'flex';
@@ -428,21 +429,38 @@
     function buildSchedule(instAmt, baseN, totalInst, yr, startMonth, newDate, changed, paid, proRata, proRataAmt) {
       const tbody = document.getElementById('schedBody');
       tbody.innerHTML = '';
-      const dayLabel = newDate === 15 ? '15' : '25';
       let cum = 0;
 
       for (let i = 1; i <= totalInst; i++) {
         const mIdx = (startMonth - 1 + (i - 1)) % 12;
         const yAdj = yr + Math.floor((startMonth - 1 + (i - 1)) / 12);
+        const isJanuary = mIdx === 0;
         const isExtra = changed && i === totalInst;
         const isFirst = i === 1;
         const isProRata = isFirst && proRata;
         const amt = isProRata ? proRataAmt : instAmt;
         cum += amt;
-        const dateStr = `${dayLabel} ${MONTHS[mIdx]} ${yAdj}`;
-        const noteTxt = isExtra ? '<span class="badge extra">Extra month</span>' : isProRata ? '<span class="badge prorata">Pro-rata</span>' : '—';
-        const paidSoFar = parseFloat(document.getElementById('amountPaid').value) || 0;
-        const statusTxt = cum <= paidSoFar ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
+
+        // January: always 15 Jan (Open Day)
+        // 15th payers: 22nd of the same month
+        // 25th payers: 3rd of the following month
+        let dateStr;
+        if (isJanuary) {
+          dateStr = `15 Jan ${yAdj}`;
+        } else if (newDate === 15) {
+          dateStr = `22 ${MONTHS[mIdx]} ${yAdj}`;
+        } else {
+          const d = new Date(yAdj, mIdx + 1, 3);
+          dateStr = `3 ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        const noteParts = [];
+        if (isJanuary) noteParts.push('<span class="badge openday">Open day</span>');
+        if (isProRata) noteParts.push('<span class="badge prorata">Pro-rata</span>');
+        if (isExtra) noteParts.push('<span class="badge extra">Arrear</span>');
+        const noteTxt = noteParts.length ? noteParts.join(' ') : '—';
+
+        const statusTxt = cum <= paid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
         if (isExtra) tr.className = 'extra-row';
         tr.innerHTML = `<td>${i}</td><td>${dateStr}</td><td>R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
