@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Arrangement Form — Brookside Group of Schools</title>
+  <link rel="icon" href="assets/logo.png" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      --font-sans: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      --color-text-primary: #111827;
+      --color-text-secondary: #6b7280;
+      --color-border-secondary: #d1d5db;
+      --color-border-tertiary: #e5e7eb;
+      --color-background-primary: #ffffff;
+      --color-background-secondary: #f9fafb;
+      --border-radius-md: 6px;
+    }
+
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&display=swap');
+    .trajan { font-family: 'Cinzel', serif; letter-spacing: 2px; }
+
+    /* ── Form styles (from original form) ── */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: var(--font-sans); background: #f3f4f6; }
+
+    .page-wrap { max-width: 720px; margin: 0 auto; padding: 1.5rem 1rem 3rem; }
+
+    .wrap { padding: 1.5rem; background: var(--color-background-primary); border-radius: 10px; box-shadow: 0 1px 6px rgba(0,0,0,0.08); }
+
+    .lh-top { border-bottom: 3px solid #E8A020; padding-bottom: 10px; margin-bottom: 0; }
+    .lh-inner { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .lh-logo { width: 72px; height: 72px; object-fit: contain; flex-shrink: 0; }
+    .lh-center { flex: 1; text-align: center; }
+    .lh-school { font-size: 20px; font-weight: 500; color: #185FA5; letter-spacing: 0.04em; }
+    .lh-motto { font-size: 11px; color: #E8A020; letter-spacing: 0.12em; text-transform: uppercase; margin-top: 2px; }
+    .lh-contact { font-size: 11px; color: var(--color-text-secondary); margin-top: 4px; line-height: 1.6; }
+    .lh-right { text-align: right; flex-shrink: 0; }
+    .lh-right-label { font-size: 10px; color: var(--color-text-secondary); text-transform: uppercase; letter-spacing: 0.06em; }
+    .lh-right-val { font-size: 12px; color: #185FA5; font-weight: 500; }
+
+    .form-title-bar { background: #185FA5; color: #E6F1FB; padding: 8px 14px; display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; border-radius: 4px; }
+    .form-title-bar .ft { font-size: 14px; font-weight: 500; letter-spacing: 0.03em; }
+    .form-title-bar .ref { font-size: 12px; opacity: 0.85; }
+
+    .sec { margin-bottom: 1.4rem; }
+    .sec-label { font-size: 11px; font-weight: 500; color: #185FA5; text-transform: uppercase; letter-spacing: 0.07em; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 0.5px solid #B5D4F4; }
+    .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .field { display: flex; flex-direction: column; gap: 3px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 12px; color: var(--color-text-secondary); }
+    input, select, textarea { width: 100%; font-family: var(--font-sans); font-size: 13px; padding: 6px 9px; border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); background: var(--color-background-primary); color: var(--color-text-primary); outline: none; }
+    input:focus, select:focus, textarea:focus { border-color: #185FA5; box-shadow: 0 0 0 2px #185FA520; }
+    textarea { resize: vertical; min-height: 55px; }
+
+    .payer-toggle { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .payer-opt { cursor: pointer; }
+    .payer-opt input[type=radio] { display: none; }
+    .payer-card { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 9px 12px; display: flex; align-items: center; gap: 9px; transition: all 0.15s; }
+    .payer-opt input[type=radio]:checked + .payer-card { border-color: #185FA5; background: #E6F1FB; }
+    .payer-card i { font-size: 18px; color: var(--color-text-secondary); }
+    .payer-opt input[type=radio]:checked + .payer-card i { color: #185FA5; }
+    .payer-card strong { font-size: 13px; font-weight: 500; color: var(--color-text-primary); display: block; }
+    .payer-card span { font-size: 11px; color: var(--color-text-secondary); }
+
+    .notice { border-radius: var(--border-radius-md); padding: 9px 12px; font-size: 12px; display: flex; gap: 9px; align-items: flex-start; margin-top: 8px; }
+    .notice i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+    .notice.info { background: #E6F1FB; border: 0.5px solid #85B7EB; color: #0C447C; }
+    .notice.warn { background: #FAEEDA; border: 0.5px solid #EF9F27; color: #412402; }
+    .notice.ok { background: #EAF3DE; border: 0.5px solid #97C459; color: #173404; }
+    .notice.blue { background: #E6F1FB; border: 0.5px solid #85B7EB; color: #0C447C; }
+
+    .scard-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1rem; }
+    .scard { background: var(--color-background-secondary); border-radius: var(--border-radius-md); padding: 8px 10px; }
+    .scard-lbl { font-size: 11px; color: var(--color-text-secondary); margin-bottom: 3px; }
+    .scard-val { font-size: 17px; font-weight: 500; color: var(--color-text-primary); }
+    .scard-val.blue { color: #185FA5; }
+    .scard-val.amber { color: #854F0B; }
+    .scard-val.green { color: #3B6D11; }
+
+    .stbl { width: 100%; border-collapse: collapse; font-size: 12px; table-layout: fixed; }
+    .stbl th { font-weight: 500; font-size: 11px; color: var(--color-text-secondary); text-align: left; padding: 5px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); background: var(--color-background-secondary); }
+    .stbl td { padding: 6px 8px; border-bottom: 0.5px solid var(--color-border-tertiary); color: var(--color-text-primary); overflow: hidden; text-overflow: ellipsis; }
+    .stbl tr:last-child td { border-bottom: none; }
+    .stbl tr.extra-row td { background: #FAEEDA22; }
+
+    .badge { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 20px; font-weight: 500; white-space: nowrap; }
+    .badge.extra { background: #FAEEDA; color: #633806; }
+    .badge.paid { background: #EAF3DE; color: #27500A; }
+    .badge.due { background: #E6F1FB; color: #0C447C; }
+    .badge.prorata { background: #EEEDFE; color: #3C3489; }
+
+    .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.2rem 0; }
+
+    .sig-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .sig-box { border: 0.5px solid var(--color-border-secondary); border-radius: var(--border-radius-md); padding: 10px 12px; min-height: 65px; display: flex; flex-direction: column; justify-content: flex-end; }
+    .sig-box span { font-size: 11px; color: var(--color-text-secondary); border-top: 0.5px solid var(--color-border-tertiary); padding-top: 5px; margin-top: 6px; display: block; }
+
+    .toggle-row { display: flex; align-items: center; gap: 9px; margin-bottom: 8px; }
+    .toggle-sw { position: relative; width: 34px; height: 18px; flex-shrink: 0; }
+    .toggle-sw input { display: none; }
+    .toggle-sl { position: absolute; inset: 0; background: var(--color-border-secondary); border-radius: 20px; cursor: pointer; transition: background 0.2s; }
+    .toggle-sw input:checked + .toggle-sl { background: #185FA5; }
+    .toggle-sl::before { content: ''; position: absolute; width: 12px; height: 12px; background: white; border-radius: 50%; top: 3px; left: 3px; transition: transform 0.2s; }
+    .toggle-sw input:checked + .toggle-sl::before { transform: translateX(16px); }
+
+    .print-btn { width: 100%; padding: 9px; border-radius: var(--border-radius-md); background: #185FA5; color: #E6F1FB; font-size: 13px; font-weight: 500; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: 1rem; }
+    .print-btn:hover { background: #0C447C; }
+
+    .lh-footer { margin-top: 1.5rem; padding-top: 8px; border-top: 2px solid #E8A020; display: flex; justify-content: space-between; align-items: center; }
+    .lh-footer-left { font-size: 10px; color: var(--color-text-secondary); line-height: 1.7; }
+    .lh-footer-right { font-size: 10px; color: var(--color-text-secondary); text-align: right; line-height: 1.7; }
+    .lh-footer em { font-style: italic; color: #185FA5; }
+
+    @media print {
+      body { background: white; }
+      .page-wrap { padding: 0; }
+      .wrap { box-shadow: none; border-radius: 0; padding: 0; }
+      .site-nav, .print-btn { display: none !important; }
+    }
+
+    @media (max-width: 600px) {
+      .grid2 { grid-template-columns: 1fr; }
+      .scard-row { grid-template-columns: 1fr 1fr; }
+      .sig-row { grid-template-columns: 1fr; }
+      .lh-inner { flex-direction: column; text-align: center; }
+      .lh-right { text-align: center; }
+      .lh-footer { flex-direction: column; gap: 8px; text-align: center; }
+      .lh-footer-right { text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Site navigation bar -->
+  <header class="site-nav bg-[#1D2D44] text-white shadow-md" style="font-family:var(--font-sans);">
+    <div style="max-width:720px;margin:0 auto;padding:10px 1rem;display:flex;align-items:center;justify-content:space-between;">
+      <a href="index.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:white;">
+        <img src="assets/brookside-logo.png" alt="Brookside Logo" style="height:40px;object-fit:contain;">
+        <span style="font-size:14px;font-weight:600;letter-spacing:1px;" class="trajan">Brookside School</span>
+      </a>
+      <a href="index.html" style="font-size:13px;color:#fcd34d;text-decoration:none;display:flex;align-items:center;gap:5px;">
+        <i class="ti ti-arrow-left" style="font-size:15px;"></i> Back to Home
+      </a>
+    </div>
+  </header>
+
+  <div class="page-wrap">
+    <div class="wrap">
+
+      <!-- Letterhead -->
+      <div class="lh-top">
+        <div class="lh-inner">
+          <img class="lh-logo" src="assets/brookside-logo.png" alt="Brookside School crest">
+          <div class="lh-center">
+            <div class="lh-school">Brookside Group of Schools</div>
+            <div class="lh-motto">Excellentia Fides Ductus</div>
+            <div class="lh-contact">
+              Tel: (087) 527-0655 &nbsp;|&nbsp; WhatsApp: (064) 507-0294<br>
+              W: www.brookside.africa &nbsp;|&nbsp; E: admin@brookside.africa<br>
+              5 De Wet Street, Piet Retief, Mpumalanga, 2380
+            </div>
+          </div>
+          <div class="lh-right">
+            <div class="lh-right-label">Reg. number</div>
+            <div class="lh-right-val">2022/371683/07</div>
+            <div style="margin-top:6px;" class="lh-right-label">Date</div>
+            <div class="lh-right-val" id="todayLabel">—</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-title-bar">
+        <span class="ft"><i class="ti ti-file-text" aria-hidden="true" style="font-size:15px;vertical-align:-2px;margin-right:6px;"></i>Payment arrangement form — change of payment date</span>
+        <span class="ref">Ref: <span id="refDisplay">PAF-2025-0001</span></span>
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">Reference &amp; administrative details</div>
+        <div class="grid2">
+          <div class="field"><label>Reference number</label><input type="text" id="refInput" value="PAF-2025-0001" oninput="document.getElementById('refDisplay').textContent=this.value"></div>
+          <div class="field"><label>Academic year</label>
+            <select id="acadYear" onchange="updateForm()">
+              <option value="2024">2024</option><option value="2025" selected>2025</option>
+              <option value="2026">2026</option><option value="2027">2027</option>
+            </select>
+          </div>
+          <div class="field"><label>Date of arrangement</label><input type="date" id="arrangementDate"></div>
+          <div class="field"><label>Standard installments per year</label><input type="number" id="installments" value="11" min="1" max="12" oninput="updateForm()"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Student information</div>
+        <div class="grid2">
+          <div class="field"><label>Student full name</label><input type="text" placeholder="Full name" id="studentName"></div>
+          <div class="field"><label>Grade / class</label><input type="text" placeholder="e.g. Grade 8A"></div>
+          <div class="field"><label>Parent / guardian name</label><input type="text" placeholder="Full name"></div>
+          <div class="field"><label>Contact number</label><input type="text" placeholder="+27 ..."></div>
+          <div class="field full"><label>Email address</label><input type="text" placeholder="email@example.com"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Enrolment — start of billing</div>
+        <div class="toggle-row">
+          <label class="toggle-sw"><input type="checkbox" id="midYearToggle" onchange="toggleMidYear()"><span class="toggle-sl"></span></label>
+          <span style="font-size:13px;color:var(--color-text-secondary);">Child joined mid-year (after January)</span>
+        </div>
+        <div id="midYearFields">
+          <div class="grid2">
+            <div class="field" id="startMonthWrap">
+              <label>Month enrolment started</label>
+              <select id="startMonth" onchange="updateForm()">
+                <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+                <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+                <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+                <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Pro-rata first installment?</label>
+              <select id="proRata" onchange="toggleProRata()">
+                <option value="no">No — full amount from start</option>
+                <option value="yes">Yes — partial first installment</option>
+              </select>
+            </div>
+            <div class="field" id="proRataAmtWrap" style="display:none;">
+              <label>Pro-rata amount (R)</label>
+              <input type="number" id="proRataAmt" value="0" min="0" oninput="updateForm()">
+            </div>
+          </div>
+          <div class="notice ok" id="midYearNote" style="margin-top:8px;">
+            <i class="ti ti-info-circle" aria-hidden="true"></i>
+            <div id="midYearNoteText">Schedule starts January. Standard academic year billing.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Fee structure</div>
+        <div class="grid2">
+          <div class="field"><label>Total annual school fees (R)</label><input type="number" id="totalFees" value="22000" min="0" oninput="updateForm()"></div>
+          <div class="field"><label>Amount already paid (R)</label><input type="number" id="amountPaid" value="0" min="0" oninput="updateForm()"></div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Current payment schedule</div>
+        <div class="payer-toggle">
+          <label class="payer-opt"><input type="radio" name="payerType" value="15" checked onchange="updateForm()">
+            <div class="payer-card"><i class="ti ti-calendar-event" aria-hidden="true"></i><div><strong>15th payer</strong><span>Due on the 15th</span></div></div>
+          </label>
+          <label class="payer-opt"><input type="radio" name="payerType" value="25" onchange="updateForm()">
+            <div class="payer-card"><i class="ti ti-calendar-due" aria-hidden="true"></i><div><strong>25th / month-end</strong><span>Due on 25th or last day</span></div></div>
+          </label>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Change of payment date</div>
+        <div class="grid2">
+          <div class="field"><label>New payment date</label>
+            <select id="newDate" onchange="updateForm()">
+              <option value="15">15th of each month</option>
+              <option value="25">25th / month-end</option>
+            </select>
+          </div>
+          <div class="field"><label>Effective from (month)</label>
+            <select id="effectiveMonth" onchange="updateForm()">
+              <option value="1">January</option><option value="2">February</option><option value="3">March</option>
+              <option value="4">April</option><option value="5">May</option><option value="6">June</option>
+              <option value="7">July</option><option value="8">August</option><option value="9">September</option>
+              <option value="10">October</option><option value="11">November</option><option value="12">December</option>
+            </select>
+          </div>
+        </div>
+        <div id="changeNotice" class="notice warn" style="display:none;">
+          <i class="ti ti-alert-triangle" aria-hidden="true"></i>
+          <div id="changeNoticeText"></div>
+        </div>
+        <div id="sameNotice" class="notice info" style="display:none;">
+          <i class="ti ti-info-circle" aria-hidden="true"></i>
+          <div>No change — current and new payment dates are the same.</div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Payment schedule summary</div>
+        <div class="scard-row">
+          <div class="scard"><div class="scard-lbl">Monthly installment</div><div class="scard-val blue" id="instAmt">R 0</div></div>
+          <div class="scard"><div class="scard-lbl">Total installments</div><div class="scard-val" id="totalInst">0</div></div>
+          <div class="scard"><div class="scard-lbl">Schedule starts</div><div class="scard-val green" id="schedStart">Jan</div></div>
+          <div class="scard"><div class="scard-lbl">Balance outstanding</div><div class="scard-val amber" id="balOut">R 0</div></div>
+        </div>
+        <div style="overflow-x:auto;">
+          <table class="stbl">
+            <colgroup><col style="width:32px"><col style="width:110px"><col style="width:90px"><col style="width:80px"><col style="width:65px"></colgroup>
+            <thead><tr><th>#</th><th>Due date</th><th>Amount (R)</th><th>Notes</th><th>Status</th></tr></thead>
+            <tbody id="schedBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <div class="sec">
+        <div class="sec-label">Reason for change</div>
+        <textarea placeholder="Please provide a brief reason for the payment date change..."></textarea>
+      </div>
+
+      <div class="sec">
+        <div class="sec-label">Agreement &amp; signatures</div>
+        <div class="notice blue" style="margin-bottom:10px;">
+          <i class="ti ti-file-check" aria-hidden="true"></i>
+          <div style="font-size:12px;">By signing below, the parent/guardian acknowledges that this payment date change creates a one-month arrear. The full outstanding balance must be settled by the extended deadline shown above. Non-payment may result in exclusion from school activities per Brookside Group policy.</div>
+        </div>
+        <div class="sig-row">
+          <div class="sig-box"><span>Parent / guardian signature &amp; date</span></div>
+          <div class="sig-box"><span>School representative signature &amp; date</span></div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:10px;align-items:center;">
+          <div class="field" style="max-width:200px;"><label>Official stamp</label>
+            <div style="border:0.5px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);height:50px;display:flex;align-items:center;justify-content:center;">
+              <span style="font-size:11px;color:var(--color-text-secondary);font-style:italic;">Official stamp here</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lh-footer">
+        <div class="lh-footer-left">
+          <em>Brookside Group of Schools</em> &nbsp;|&nbsp; Edu-Build Institute Piet Retief<br>
+          Nurturing excellence, inspiring faith, shaping tomorrow's leaders<br>
+          5 De Wet Street, Piet Retief, Mpumalanga, 2380
+        </div>
+        <div class="lh-footer-right">
+          admin@brookside.africa<br>
+          (087) 527-0655 &nbsp;|&nbsp; (064) 507-0294<br>
+          www.brookside.africa
+        </div>
+      </div>
+
+      <button class="print-btn" onclick="window.print()"><i class="ti ti-printer" aria-hidden="true"></i> Print / save as PDF</button>
+
+    </div>
+  </div>
+
+  <script>
+    const MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+    const MONTHSFULL = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+
+    const now = new Date();
+    document.getElementById('todayLabel').textContent = now.toLocaleDateString('en-ZA', {day:'2-digit', month:'short', year:'numeric'});
+    document.getElementById('arrangementDate').value = now.toISOString().split('T')[0];
+    document.getElementById('effectiveMonth').value = now.getMonth() + 1;
+    document.getElementById('startMonth').value = 1;
+
+    function toggleMidYear() { updateForm(); }
+
+    function toggleProRata() {
+      const on = document.getElementById('proRata').value === 'yes';
+      document.getElementById('proRataAmtWrap').style.display = on ? 'flex' : 'none';
+      updateForm();
+    }
+
+    function updateForm() {
+      const total = parseFloat(document.getElementById('totalFees').value) || 0;
+      const stdN = parseInt(document.getElementById('installments').value) || 11;
+      const paid = parseFloat(document.getElementById('amountPaid').value) || 0;
+      const yr = parseInt(document.getElementById('acadYear').value) || 2025;
+      const currentType = parseInt(document.querySelector('input[name=payerType]:checked').value);
+      const newDate = parseInt(document.getElementById('newDate').value);
+      const effMonth = parseInt(document.getElementById('effectiveMonth').value);
+      const changed = currentType !== newDate;
+      const midYear = document.getElementById('midYearToggle').checked;
+      const startMonth = midYear ? parseInt(document.getElementById('startMonth').value) : 1;
+      const proRata = midYear && document.getElementById('proRata').value === 'yes';
+      const proRataAmt = proRata ? (parseFloat(document.getElementById('proRataAmt').value) || 0) : 0;
+
+      const lastBillingMonth = Math.min(12, stdN);
+      const baseN = midYear ? Math.max(1, lastBillingMonth - startMonth + 1) : stdN;
+      const extraMonth = changed ? 1 : 0;
+      const totalInst = baseN + extraMonth;
+      const instAmt = baseN > 0 ? total / baseN : 0;
+      const balance = Math.max(0, total - paid);
+
+      document.getElementById('instAmt').textContent = 'R ' + fmt(instAmt);
+      document.getElementById('totalInst').textContent = totalInst;
+      document.getElementById('balOut').textContent = 'R ' + fmt(balance);
+      document.getElementById('schedStart').textContent = MONTHSFULL[startMonth - 1] + ' ' + yr;
+
+      const noteEl = document.getElementById('midYearNoteText');
+      if (midYear) {
+        noteEl.textContent = `Schedule starts ${MONTHSFULL[startMonth-1]} ${yr}. ${baseN} installment${baseN!==1?'s':''} cover fees from enrolment to ${MONTHSFULL[lastBillingMonth-1]} ${yr}.`;
+      } else {
+        noteEl.textContent = `Schedule starts January ${yr}. Standard academic year billing over ${stdN} months.`;
+      }
+
+      if (changed) {
+        document.getElementById('changeNotice').style.display = 'flex';
+        document.getElementById('sameNotice').style.display = 'none';
+        const fL = currentType === 15 ? '15th' : '25th/month-end';
+        const tL = newDate === 15 ? '15th' : '25th/month-end';
+        document.getElementById('changeNoticeText').innerHTML = `Payment date changing from <strong>${fL}</strong> to <strong>${tL}</strong> effective ${MONTHSFULL[effMonth-1]} ${yr}. A one-month arrear is created — an extra installment is added. Total installments: <strong>${totalInst}</strong>.`;
+      } else {
+        document.getElementById('changeNotice').style.display = 'none';
+        document.getElementById('sameNotice').style.display = 'flex';
+      }
+
+      buildSchedule(instAmt, baseN, totalInst, yr, startMonth, newDate, changed, paid, proRata, proRataAmt);
+    }
+
+    function buildSchedule(instAmt, baseN, totalInst, yr, startMonth, newDate, changed, paid, proRata, proRataAmt) {
+      const tbody = document.getElementById('schedBody');
+      tbody.innerHTML = '';
+      const dayLabel = newDate === 15 ? '15' : '25';
+      let cum = 0;
+
+      for (let i = 1; i <= totalInst; i++) {
+        const mIdx = (startMonth - 1 + (i - 1)) % 12;
+        const yAdj = yr + Math.floor((startMonth - 1 + (i - 1)) / 12);
+        const isExtra = changed && i === totalInst;
+        const isFirst = i === 1;
+        const isProRata = isFirst && proRata;
+        const amt = isProRata ? proRataAmt : instAmt;
+        cum += amt;
+        const dateStr = `${dayLabel} ${MONTHS[mIdx]} ${yAdj}`;
+        const noteTxt = isExtra ? '<span class="badge extra">Extra month</span>' : isProRata ? '<span class="badge prorata">Pro-rata</span>' : '—';
+        const paidSoFar = parseFloat(document.getElementById('amountPaid').value) || 0;
+        const statusTxt = cum <= paidSoFar ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
+        const tr = document.createElement('tr');
+        if (isExtra) tr.className = 'extra-row';
+        tr.innerHTML = `<td>${i}</td><td>${dateStr}</td><td>R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
+        tbody.appendChild(tr);
+      }
+    }
+
+    function fmt(n) { return n.toLocaleString('en-ZA', {minimumFractionDigits:2, maximumFractionDigits:2}); }
+
+    updateForm();
+  </script>
+</body>
+</html>
