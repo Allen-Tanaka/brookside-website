@@ -94,6 +94,7 @@
     .badge.openday { background: #FEF3C7; color: #92400E; }
     .stbl tr.paid-row td { background: #EAF3DE; color: #1a3d09; }
     .stbl tr.paid-row.extra-row td { background: #d4edbe; }
+    .stbl tr.arrear-row td { background: #FEF3C7; color: #78350F; }
 
     .divider { height: 0.5px; background: var(--color-border-tertiary); margin: 1.2rem 0; }
 
@@ -457,7 +458,10 @@
         const isProRata = isFirst && proRata;
         const amt = isProRata ? proRataAmt : instAmt;
         cum += amt;
+        const prevCum = cum - amt;
         const isPaid = cum <= paid;
+        const isPartial = !isPaid && prevCum < paid && paid > 0;
+        const arrears = isPartial ? cum - paid : 0;
 
         // From effMonth onwards (within the same year or later), apply the new payment date
         const instMonthNum = mIdx + 1;
@@ -486,11 +490,13 @@
         if (isProRata) noteParts.push('<span class="badge prorata">Pro-rata</span>');
         if (dateChanged) noteParts.push('<span class="badge extra">Date changed</span>');
         if (isPaid) noteParts.push(`<span class="badge paid">Paid on ${payDateStr}</span>`);
+        if (isPartial) noteParts.push(`<span class="badge extra">Arrears R ${fmt(arrears)}</span>`);
         const noteTxt = noteParts.length ? noteParts.join('<br>') : '—';
 
         const statusTxt = isPaid ? '<span class="badge paid">Paid</span>' : '<span class="badge due">Due</span>';
         const tr = document.createElement('tr');
         if (isPaid) tr.className = 'paid-row';
+        else if (isPartial) tr.className = 'arrear-row';
         tr.innerHTML = `<td>${i}</td><td>${payDateStr}</td><td>${dueDateStr}</td><td style="white-space:nowrap">R ${fmt(amt)}</td><td>${noteTxt}</td><td>${statusTxt}</td>`;
         tbody.appendChild(tr);
       }
